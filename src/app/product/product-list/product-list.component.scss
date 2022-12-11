@@ -1,0 +1,18 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.pagination {
+  margin-top: 24px;
+  align-self: flex-end;
+}
+
+.scroll-container {
+  overflow-x: auto;
+  display: block;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}

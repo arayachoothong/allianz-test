@@ -1,0 +1,106 @@
+<div class="wrapper">
+  <div class="scroll-container">
+    <table nxTable condensed class="nx-margin-bottom-xs">
+      <thead>
+        <tr nxTableRow>
+          <th nxHeaderCell></th>
+          <th nxHeaderCell>Product</th>
+          <th nxHeaderCell>Website</th>
+          <th nxHeaderCell>Price</th>
+          <th nxHeaderCell>Ending At</th>
+          <th nxHeaderCell>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr nxTableRow *ngFor="let item of formArray.controls; index as i" [formGroup]="getFormGroup(i)">
+          <td nxTableCell>
+            <div *ngIf="!item.value.isEdit; else editableBlock">
+              <nx-icon name="pen" font="fa" size="s" (click)="onEdit(i)"></nx-icon>
+            </div>
+            <ng-template #editableBlock>
+              <nx-icon name="save" font="fa" size="s" (click)="onSave(i)"></nx-icon>
+            </ng-template>
+          </td>
+          <td nxTableCell>
+            <div *ngIf="!item.value.isEdit; else editProduct">
+              {{ item.value.product }}
+            </div>
+            <ng-template #editProduct>
+              <nx-formfield appearance="outline">
+                <input nxInput formControlName="product" maxlength="20" />
+                <nx-error appearance="text" nxFormfieldError>
+                  Please enter product name!
+                </nx-error>
+              </nx-formfield>
+            </ng-template>
+          </td>
+          <td nxTableCell>
+            <div *ngIf="!item.value.isEdit; else editWebsite">
+              <nx-link><a routerLink="#">{{ item.value.website }}</a></nx-link>
+            </div>
+            <ng-template #editWebsite>
+              <nx-formfield appearance="outline">
+                <input nxInput inputmode="url" formControlName="website" />
+                <nx-error appearance="text" nxFormfieldError>
+                  Please enter a valid url!
+                </nx-error>
+              </nx-formfield>
+            </ng-template>
+          </td>
+          <td nxTableCell>
+            <div *ngIf="!item.value.isEdit; else editPrice">
+              {{ item.value.price | currency:'EUR':'EUR':'3.2-2':'de'  }}
+            </div>
+            <ng-template #editPrice>
+              <nx-formfield appearance="outline">
+                <input nxInput type="number" inputmode="decimal" formControlName="price" />
+                <span nxFormfieldSuffix>
+                  {{currencyCode}}
+                </span>
+                <nx-error appearance="text" nxFormfieldError>
+                  Please enter price!
+                </nx-error>
+              </nx-formfield>
+            </ng-template>
+          </td>
+          <td nxTableCell>
+            <div *ngIf="!item.value.isEdit; else editEndingAt">
+              {{ item.value.endingAt | date: "dd/MM/yyyy" }}
+            </div>
+            <ng-template #editEndingAt>
+              <nx-formfield appearance="outline">
+                <input nxDatefield nxInput [nxDatepicker]="endingAtPicker" formControlName="endingAt" />
+                <nx-datepicker-toggle [for]="endingAtPicker" nxFormfieldSuffix></nx-datepicker-toggle>
+                <nx-datepicker #endingAtPicker></nx-datepicker>
+                <nx-error appearance="text" nxFormfieldError>
+                  Please enter a valid date!
+                </nx-error>
+              </nx-formfield>
+            </ng-template>
+          </td>
+          <td nxTableCell>
+            <div *ngIf="!item.value.isEdit; else editStatus">
+              <nx-badge [type]="item.value.status">
+                <span class="uppercase">{{
+                  item.value.statusText
+                }}</span></nx-badge>
+            </div>
+            <ng-template #editStatus>
+              <nx-formfield appearance="outline" class="uppercase">
+                <nx-dropdown formControlName="statusText" (selectionChange)="onStatusChange($event, i)">
+                  <nx-dropdown-item *ngFor="let item of statusList" [nxValue]="item.statusText">
+                    <span class="uppercase"> {{ item.statusText }}</span>
+                  </nx-dropdown-item>
+                </nx-dropdown>
+              </nx-formfield>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <nx-pagination class="pagination" [nxCount]="totalRecord" [nxPage]="pagination.page" nxType="advanced"
+    [nxPerPage]="pagination.limit" (nxGoPrev)="prevPage()" (nxGoNext)="nextPage()" (nxGoPage)="goToPage($event)">
+  </nx-pagination>
+</div>
